@@ -1,12 +1,5 @@
-<% password = ENV.fetch('DATABASE_PASSWORD') do
-  # For db:migrate convenience on servers
-  if system('systemctl --user --quiet is-active gitstar-ranking-server')
-    env = `systemctl --user show gitstar-ranking-server`.lines.find { |l| l.start_with?('Environment=') }
-    env = env.delete_prefix('Environment=').chomp.split(' ').map { |e| e.split('=', 2) }.to_h
-    env['DATABASE_PASSWORD']
-  end
-end %>
-default: &default
+<% password = ENV['DATABASE_PASSWORD'] %>
+default:
   adapter: postgresql
   encoding: unicode
   pool: 8
@@ -14,12 +7,27 @@ default: &default
   password: <%= password %>
   host: 127.0.0.1
 
+# ... rest of your configurations ...
+
+# ... rest of your configurations ...
+
+
 development:
-  <<: *default
+  adapter: postgresql
+  encoding: unicode
+  pool: 8
+  username: k0kubun
+  password: <%= password %>
+  host: 127.0.0.1
   database: gitstar_ranking
 
 test:
-  <<: *default
+  adapter: postgresql
+  encoding: unicode
+  pool: 8
+  username: k0kubun
+  password: <%= password %>
+  host: 127.0.0.1
   database: gitstar_ranking_test
 
 production:
